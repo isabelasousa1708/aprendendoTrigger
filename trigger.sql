@@ -53,10 +53,15 @@ DECLARE
      RAISE NOTICE 'NOVO REGISTRO: especialidade_id = %', NEW.especialidade_id;
      RAISE NOTICE 'NOVO REGISTRO: profiss_id = ', NEW.profiss_id;
 
-        IF NEW.especialidade_id = 2 THEN 
-         RAISE EXCEPTION 'Nao estamos aceitando INSERT id = 2';
-        END IF;
-    
+        --IF NEW.especialidade_id = 2 AND THEN 
+        --RAISE EXCEPTION 'Nao estamos aceitando INSERT id = 2';
+        --END IF;
+
+     IF pacientes_row.sexo = 'm' AND especialidades_row.nome = 'ginecologista' THEN
+       RAISE EXCEPTION 'Ginecologista poder ser agendado apenas para pacientes do sexo feminino';
+    ELSE  pacientes_row.sexo = 'f' AND especialidade_row.nome = 'urologista' THEN
+       RAISE EXCEPTION 'Urologista poder ser agendado apenas para pacientes do sexo masculino';
+
     RETURN NEW;
 END;
 
@@ -66,5 +71,7 @@ CREATE TRIGGER ValidaDadosConsulta
 BEFORE INSERT OR UPDATE ON consultas
 FOR EACH ROW --FOR EACH STATEMENT
  EXECUTE PROCEDURE trgValidaDadosConsulta();
-
  --colocanr drop table, create table
+
+ --conexão do bd pelo cmd : heroku pg:psql -a ptgbd
+ 
